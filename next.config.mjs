@@ -8,22 +8,17 @@ console.log("[Next] build with chunk: ", !disableChunk);
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
   eslint: {
     ignoreDuringBuilds: true,
   },
-  // ... các config khác giữ nguyên
   webpack(config) {
     config.module.rules.push({
       test: /\.svg$/,
       use: ["@svgr/webpack"],
-      
-    }
-                            
-    );
+    });
 
     if (disableChunk) {
       config.plugins.push(
@@ -49,18 +44,9 @@ const nextConfig = {
 const CorsHeaders = [
   { key: "Access-Control-Allow-Credentials", value: "true" },
   { key: "Access-Control-Allow-Origin", value: "*" },
-  {
-    key: "Access-Control-Allow-Methods",
-    value: "*",
-  },
-  {
-    key: "Access-Control-Allow-Headers",
-    value: "*",
-  },
-  {
-    key: "Access-Control-Max-Age",
-    value: "86400",
-  },
+  { key: "Access-Control-Allow-Methods", value: "*" },
+  { key: "Access-Control-Allow-Headers", value: "*" },
+  { key: "Access-Control-Max-Age", value: "86400" },
 ];
 
 if (mode !== "export") {
@@ -75,17 +61,9 @@ if (mode !== "export") {
 
   nextConfig.rewrites = async () => {
     const ret = [
-      // adjust for previous version directly using "/api/proxy/" as proxy base route
-      // {
-      //   source: "/api/proxy/v1/:path*",
-      //   destination: "https://api.openai.com/v1/:path*",
-      // },
       {
-        // https://{resource_name}.openai.azure.com/openai/deployments/{deploy_name}/chat/completions
-        source:
-          "/api/proxy/azure/:resource_name/deployments/:deploy_name/:path*",
-        destination:
-          "https://:resource_name.openai.azure.com/openai/deployments/:deploy_name/:path*",
+        source: "/api/proxy/azure/:resource_name/deployments/:deploy_name/:path*",
+        destination: "https://:resource_name.openai.azure.com/openai/deployments/:deploy_name/:path*",
       },
       {
         source: "/api/proxy/google/:path*",
@@ -113,9 +91,7 @@ if (mode !== "export") {
       },
     ];
 
-    return {
-      beforeFiles: ret,
-    };
+    return { beforeFiles: ret };
   };
 }
 
